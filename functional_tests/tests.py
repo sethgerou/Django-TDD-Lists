@@ -5,7 +5,7 @@ from selenium.common.exceptions import WebDriverException
 import time
 import unittest
 
-class NewVisiortTest(LiveServerTestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -46,7 +46,7 @@ class NewVisiortTest(LiveServerTestCase):
         inputbox.send_keys('go grocery shopping')
         # when user hits enter, page updates and lists "1. go grocery shopping" is shown in the list.
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: go grocery shopping')
+        # self.wait_for_row_in_list_table('1: go grocery shopping')
 
         # the text box to add an item is still present.  User enters "pressure wash driveway".
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -54,8 +54,8 @@ class NewVisiortTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
         # page updates again and both items are present.
-        self.wait_for_row_in_list_table('1: go grocery shopping')
         self.wait_for_row_in_list_table('2: pressure wash driveway')
+        self.wait_for_row_in_list_table('1: go grocery shopping')
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         self.browser.get(self.live_server_url)
@@ -72,11 +72,11 @@ class NewVisiortTest(LiveServerTestCase):
 
         ## use a new browser session to make sure user data from ediths session isn't transferred.
         self.browser.quit()
-        self.browser = webdriver.FireFox()
+        self.browser = webdriver.Firefox()
 
         # when francis visits the site, she does not see Edith's list
         self.browser.get(self.live_server_url)
-        page_text = self.browser.find_elements_by_tag_name('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('go grocery shopping', page_text)
         self.assertNotIn('pressure wash driveway', page_text)
 
@@ -92,6 +92,6 @@ class NewVisiortTest(LiveServerTestCase):
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         #still no trace of edith's list
-        page_text = self.browser.find_elements_by_tag_name('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('go grocery shopping', page_text)
         self.assertIn('Buy milk', page_text)
